@@ -1,0 +1,25 @@
+"D:\Conda 2.4.1\python.exe" C:/Users/Ishaan/PycharmProjects/Kaggle/titanic/SupportVectorMachine.py
+
+Support Vector Machine Optimal:
+Cross Validation Score Max :  0.709677419355
+Cross Vaildation Score Mean :  0.668364976959
+Training Accuracy :  0.700374531835
+Mean Absolute Error 0.299625468165
+Mean Squared Error :  0.299625468165
+Normalized MSE :  0.299625468165
+
+Support Vector Machine Overfit:
+Cross Validation Score Max :  0.70625
+Cross Vaildation Score Mean :  0.653863773976
+Training Accuracy :  0.626373626374
+Mean Absolute Error 0.373626373626
+Mean Squared Error :  0.373626373626
+Normalized MSE :  0.373626373626
+
+Support Vector Machine Underfit:
+Cross Validation Score Max :  0.666666666667
+Cross Vaildation Score Mean :  0.655040650407
+Training Accuracy :  0.60492040521
+Mean Absolute Error 0.39507959479
+Mean Squared Error :  0.39507959479
+Normalized MSE :  0.39507959479
