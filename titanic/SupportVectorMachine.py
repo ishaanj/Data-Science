@@ -4,7 +4,7 @@ import sklearn.svm as svm
 import sklearn.cross_validation as crossVal
 import sklearn.metrics as metrics
 import numpy as np
-import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.learning_curve import validation_curve
 
 #Data Pre-processing
@@ -29,21 +29,21 @@ train_frame["Embarked"] = train_frame["Embarked"].map( {"S" : 0, "C" : 1, "Q" : 
 train_data = train_frame.values
 
 #Create SVMs
-support_vector_machine = svm.SVC(C = 10)
-support_vector_machine_over = svm.SVC(C = 10000)
-support_vector_machine_under = svm.SVC(C = 0.01, gamma = 0.001)
+support_vector_machine = svm.SVC(C = 1,gamma=1e-8)
+support_vector_machine_over = svm.SVC(C = 10000, gamma = 100)
+support_vector_machine_under = svm.SVC(C = 1, gamma = 0.001)
 
 #Train and test data for SVMs
-train_x = train_data[:624, 2:]
+train_x = train_data[:500, 2:]
 train_x_over = train_data[:800, 2:]
 train_x_under = train_data[:200, 2:]
-train_y = train_data[:624, 1]
+train_y = train_data[:500, 1]
 train_y_over = train_data[:800, 1]
 train_y_under = train_data[:200, 1]
-test_x = train_data[624:,2:]
+test_x = train_data[500:,2:]
 test_x_over = train_data[800:, 2:]
 test_x_under = train_data[200:, 2:]
-test_y = train_data[624:, 1]
+test_y = train_data[500:, 1]
 test_y_over = train_data[800:, 1]
 test_y_under = train_data[200:, 1]
 
@@ -112,15 +112,15 @@ param_range = np.logspace(-6, -2, 5)
 
 train_scores, test_scores = validation_curve(
     support_vector_machine, train_x, train_y, param_name="gamma", param_range=param_range,
-    cv=10, scoring="accuracy", n_jobs=1)
+    cv=5, scoring="accuracy", n_jobs=1)
 
 train_scores_over, test_scores_over = validation_curve(
     support_vector_machine_over, train_x_over, train_y_over, param_name="gamma", param_range=param_range,
-    cv=10, scoring="accuracy", n_jobs=1)
+    cv=5, scoring="accuracy", n_jobs=1)
 
 train_scores_under, test_scores_under = validation_curve(
     support_vector_machine_under, train_x_under, train_y_under, param_name="gamma", param_range=param_range,
-    cv=10, scoring="accuracy", n_jobs=1)
+    cv=5, scoring="accuracy", n_jobs=1)
 
 train_scores_mean = np.mean(train_scores, axis=1)
 train_scores_std = np.std(train_scores, axis=1)
@@ -135,52 +135,54 @@ train_scores_std_under = np.std(train_scores_under, axis=1)
 test_scores_mean_under = np.mean(test_scores_under, axis=1)
 test_scores_std_under = np.std(test_scores_under, axis=1)
 
-plt.figure(1)
-plt.subplot(131)
-plt.title("Validation Curve with SVM")
-plt.xlabel("$\gamma$")
-plt.ylabel("Score")
-plt.ylim(0.0, 1.1)
-plt.semilogx(param_range, train_scores_mean, label="Training score", color="r")
-plt.fill_between(param_range, train_scores_mean - train_scores_std,
+sns.plt.figure(1)
+sns.plt.subplot(131)
+sns.plt.title("Validation Curve with SVM")
+sns.plt.xlabel("$\gamma$")
+sns.plt.ylabel("Score")
+sns.plt.ylim(0.0, 1.1)
+sns.plt.semilogx(param_range, train_scores_mean, label="Training score", color="r")
+sns.plt.fill_between(param_range, train_scores_mean - train_scores_std,
                  train_scores_mean + train_scores_std, alpha=0.2, color="r")
-plt.semilogx(param_range, test_scores_mean, label="Cross-validation score",
+sns.plt.semilogx(param_range, test_scores_mean, label="Cross-validation score",
              color="g")
-plt.fill_between(param_range, test_scores_mean - test_scores_std,
+sns.plt.fill_between(param_range, test_scores_mean - test_scores_std,
              test_scores_mean + test_scores_std, alpha=0.2, color="g")
-plt.legend(loc="best")
-plt.plot()
+sns.plt.legend(loc="best")
+sns.plt.plot()
 
-plt.subplot(132)
-plt.title("Validation Curve with SVM OverFitting")
-plt.xlabel("$\gamma$")
-plt.ylabel("Score")
-plt.ylim(0.0, 1.1)
-plt.semilogx(param_range, train_scores_mean_over, label="Training score", color="r")
-plt.fill_between(param_range, train_scores_mean_over - train_scores_std_over,
+sns.plt.subplot(132)
+sns.plt.title("Validation Curve with SVM OverFitting")
+sns.plt.xlabel("$\gamma$")
+sns.plt.ylabel("Score")
+sns.plt.ylim(0.0, 1.1)
+sns.plt.semilogx(param_range, train_scores_mean_over, label="Training score", color="r")
+sns.plt.fill_between(param_range, train_scores_mean_over - train_scores_std_over,
                  train_scores_mean_over + train_scores_std_over, alpha=0.2, color="r")
-plt.semilogx(param_range, test_scores_mean_over, label="Cross-validation score",
+sns.plt.semilogx(param_range, test_scores_mean_over, label="Cross-validation score",
              color="g")
-plt.fill_between(param_range, test_scores_mean_over - test_scores_std_over,
+sns.plt.fill_between(param_range, test_scores_mean_over - test_scores_std_over,
                  test_scores_mean_over + test_scores_std_over, alpha=0.2, color="g")
-plt.legend(loc="best")
-plt.plot()
+sns.plt.legend(loc="best")
+sns.plt.plot()
 
-plt.subplot(133)
-plt.title("Validation Curve with SVM UnderFitting")
-plt.xlabel("$\gamma$")
-plt.ylabel("Score")
-plt.ylim(0.0, 1.1)
-plt.semilogx(param_range, train_scores_mean_under, label="Training score", color="r")
-plt.fill_between(param_range, train_scores_mean_under - train_scores_std_under,
+sns.plt.subplot(133)
+sns.plt.title("Validation Curve with SVM UnderFitting")
+sns.plt.xlabel("$\gamma$")
+sns.plt.ylabel("Score")
+sns.plt.ylim(0.0, 1.1)
+sns.plt.semilogx(param_range, train_scores_mean_under, label="Training score", color="r")
+sns.plt.fill_between(param_range, train_scores_mean_under - train_scores_std_under,
                  train_scores_mean_under + train_scores_std_under, alpha=0.2, color="r")
-plt.semilogx(param_range, test_scores_mean_under, label="Cross-validation score",
+sns.plt.semilogx(param_range, test_scores_mean_under, label="Cross-validation score",
              color="g")
-plt.fill_between(param_range, test_scores_mean_under - test_scores_std_under,
+sns.plt.fill_between(param_range, test_scores_mean_under - test_scores_std_under,
                  test_scores_mean_under + test_scores_std_under, alpha=0.2, color="g")
-plt.legend(loc="best")
-plt.plot()
+sns.plt.legend(loc="best")
+sns.plt.plot()
 
-figManager = plt.get_current_fig_manager()
+
+figManager = sns.plt.get_current_fig_manager()
 figManager.window.showMaximized()
-plt.show()
+sns.plt.savefig("Results-SVM/res_svm_graph2.png")
+sns.plt.show()
